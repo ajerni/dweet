@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ZIM - Code Creativity</title>
+
+    <!-- zimjs.com - JavaScript Canvas Framework -->
+    <script type="module">
+      // https://github.com/buglabs/dweetio-client // dweet.io
+
+      let mytext = "...waiting...";
+
+      import zim from "https://zimjs.org/cdn/015/zim";
+
+      function subscribeToDweet() {
+        dweetio.listen_for("aetest", function (dweet) {
+          // This will be called anytime there is a new dweet for my-thing (i.e. https://dweet.io/dweet/for/aetest?text=helloo)
+          zog(dweet);
+          mytext = dweet.content.text;
+          zog(mytext);
+        });
+      }
+
+      function sendDweet(new_text) {
+        dweetio.dweet_for("aetest", { text: new_text }, function (err, dweet) {
+          console.log(dweet.thing); // "my-thing"
+          console.log(dweet.content); // The content of the dweet
+          console.log(dweet.created); // The create date of the dweet
+        });
+      }
+
+      // See Docs under Frame for FIT, FILL, FULL, and TAG
+      new Frame(FIT, 1024, 768, light, dark, ready);
+      function ready() {
+        // receives text form subscriptiont to aetest
+        let label = new Label({
+          text: mytext,
+          size: 100,
+          font: "courier",
+          color: blue,
+          align: CENTER,
+        }).pos(0, 100, CENTER, TOP);
+
+        subscribeToDweet();
+
+        //sends new dweet (not only for this page!!!)
+        const input = new TextInput(350).pos(-140, 0, CENTER, CENTER);
+
+        const button = new Button({ label: "SUBMIT" })
+          .pos(160, 0, CENTER, CENTER)
+          .tap(() => {
+            sendDweet(input.text);
+          });
+
+        Ticker.add(() => {
+          label.text = mytext;
+          S.update();
+        });
+      } // end ready
+    </script>
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+  </head>
+  <body>
+    <script src="dweet.io.js"></script>
+  </body>
+</html>
