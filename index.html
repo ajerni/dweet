@@ -12,6 +12,13 @@
 
       import zim from "https://zimjs.org/cdn/015/zim";
 
+      function getLatestDweet() {
+        dweetio.get_latest_dweet_for("aetest", function (err, dweet) {
+          var dweet = dweet[0]; // Dweet is always an array of 1
+          mytext = dweet.content.text;
+        });
+      }
+
       function subscribeToDweet() {
         dweetio.listen_for("aetest", function (dweet) {
           // This will be called anytime there is a new dweet for my-thing (i.e. https://dweet.io/dweet/for/aetest?text=helloo)
@@ -41,6 +48,7 @@
           align: CENTER,
         }).pos(0, 100, CENTER, TOP);
 
+        getLatestDweet();
         subscribeToDweet();
 
         //sends new dweet (not only for this page!!!)
